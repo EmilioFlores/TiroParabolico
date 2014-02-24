@@ -18,7 +18,7 @@ public class TiroParabolico {
     public static void main(String[] args) {
         // TODO code application logic here
         //Hola esta es una prueba
-        // rudo es un caco
+     
         
     }
     
