@@ -19,9 +19,13 @@ public class TiroParabolico {
         // TODO code application logic here
         //Hola esta es una prueba
      
+<<<<<<< HEAD
         
 //Ultima prueba
 
+=======
+        // iejfusdfauiosejfo 
+>>>>>>> d7269b712cc225ad1d8048b8acbfe0aba3999643
     }
     
 }
