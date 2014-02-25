@@ -33,10 +33,13 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private int velocidad; // velocidad constante 
     private double angulo; // angulo variable
     private final int gravedad = 10; 
-    private final int posInicialTiro = getHeight() - 100; // empieza en posicion 100 
+    private final int posInicialTiro = 400; // empieza en posicion 100 
+    private int tamanoY;
+    private int tamanoX;
     private int x; // posicion x de la canasta
     private double radianes; // radianes
     private double maxHeight; // altura maxima
+    private double maxDista; // distancia maxima
     
     // boleanos
     private boolean pausa;      // bool que checa si se pauso
@@ -84,24 +87,40 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         return ((velocidad*velocidad)*Math.sin(Math.toRadians(angulo))*Math.sin(Math.toRadians(angulo)))/(2*gravedad);
     
     }
+    
+    public double distMaxima (double angulo, int velocidad) {
+        return ((velocidad*velocidad)*Math.sin(Math.toRadians(2*angulo)))/(gravedad);
+    
+    }
     void init () {
         
         addKeyListener(this);
         addMouseListener(this);
-        setSize(500, 500);
+        setSize(1000, 500);
         setBackground(Color.PINK);
         
-        velocidad = (5 + (int) (Math.random() * 5));
+        tamanoY = posInicialTiro;
+        tamanoX = getWidth();
+       
+        // loop que me calcula el angulo y la velocidad correcto para que la maxDista y max Height
+        //  no se saldran del applet
+        do { 
+        velocidad = (5 + (int) (Math.random() * 8));
         angulo = 10 + (Math.random()*70);
         
-        System.out.println(velocidad);
-        
+        System.out.println(velocidad); 
         System.out.println(angulo);
+
         
-        maxHeight = AlturaMaxima (angulo, velocidad);
-        
+        maxHeight = AlturaMaxima (angulo, velocidad)*100;
+        maxDista = distMaxima (angulo, velocidad)*100;
         
         System.out.println(maxHeight);
+        System.out.println(maxDista);
+        
+        
+        } while (maxHeight > tamanoY || (maxDista > tamanoX || maxDista < tamanoX/2) );
+        
         
 //        choqueConCanasta = new SoundClip("Images/explosion.wav");
 //        choqueConSuelo = new SoundClip("Images/explosion.wav");
