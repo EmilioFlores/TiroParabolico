@@ -29,11 +29,14 @@ import javax.swing.ImageIcon;
  */
 public class TiroParabolico extends JFrame implements KeyListener, MouseListener, Runnable {
 
-    // enteros
-    private final int velocidad = 10; // velocidad constante 
-    private int angulo; // angulo variable
+    // valores numericos
+    private int velocidad; // velocidad constante 
+    private double angulo; // angulo variable
     private final int gravedad = 10; 
+    private final int posInicialTiro = getHeight() - 100; // empieza en posicion 100 
     private int x; // posicion x de la canasta
+    private double radianes; // radianes
+    private double maxHeight; // altura maxima
     
     // boleanos
     private boolean pausa;      // bool que checa si se pauso
@@ -49,14 +52,75 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     // images
     private Image dbImage;	// Imagen a proyectar	
     private Graphics dbg;	// Objeto grafico
+    private Image foto1;
+    private Image foto2;
+    private Image foto3;
+    private Image foto4;
+    private Image foto5;
+    private Animacion anim;
+    
+    
+    // sounds
+    private SoundClip choqueConCanasta; // sonido cuando la pelota choca con canasta
+    private SoundClip choqueConSuelo; // sonido si choca con el suelo
+    private SoundClip sonidoAlLanzar; // sonido cuando se lanza la pelota 
+  
+    
     /**
      * @param args the command line arguments
      */
 
+     public TiroParabolico () {
+        init();
+        start();       
+    }
+     /**
+      * Se inicializan las variables en el metodo <I>Init</> @returns nada
+      * 
+      */
+     
+    public double AlturaMaxima (double angulo, int velocidad) {
+        
+        return ((velocidad*velocidad)*Math.sin(Math.toRadians(angulo))*Math.sin(Math.toRadians(angulo)))/(2*gravedad);
+    
+    }
     void init () {
         
         addKeyListener(this);
         addMouseListener(this);
+        setSize(500, 500);
+        setBackground(Color.PINK);
+        
+        velocidad = (5 + (int) (Math.random() * 5));
+        angulo = 10 + (Math.random()*70);
+        
+        System.out.println(velocidad);
+        
+        System.out.println(angulo);
+        
+        maxHeight = AlturaMaxima (angulo, velocidad);
+        
+        
+        System.out.println(maxHeight);
+        
+//        choqueConCanasta = new SoundClip("Images/explosion.wav");
+//        choqueConSuelo = new SoundClip("Images/explosion.wav");
+//        sonidoAlLanzar = new SoundClip("Images/explosion.wav");
+//        
+//        foto1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
+//        foto2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
+//        foto3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
+//        foto4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
+//        foto5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
+//        
+//        anim = new Animacion();
+//        
+//        anim.sumaCuadro(foto1, 200);
+//        anim.sumaCuadro(foto2, 200);
+//        anim.sumaCuadro(foto3, 200);
+//        anim.sumaCuadro(foto4, 200);
+//        anim.sumaCuadro(foto5, 200);
+        
         
     }
     
@@ -262,24 +326,24 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
