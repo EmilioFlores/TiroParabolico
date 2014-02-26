@@ -96,7 +96,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     
     }
     void init () {
-        
+    //init     
         addKeyListener(this);
         addMouseListener(this);
         setSize(1000, 500);
