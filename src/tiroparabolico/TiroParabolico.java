@@ -31,6 +31,8 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
     // valores numericos
     private int velocidad; // velocidad constante 
+    private double velocidadY;
+    private double velocidadX; 
     private double angulo; // angulo variable
     private final int gravedad = 10; 
     private final int posInicialTiro = 400; // empieza en posicion 100 
@@ -40,7 +42,8 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private double radianes; // radianes
     private double maxHeight; // altura maxima
     private double maxDista; // distancia maxima
-    
+    private final int panelScaleFactor = 300;
+    private final int xPanelOrigin = 40, yPanelOrigin = 400;
     // boleanos
     private boolean pausa;      // bool que checa si se pauso
     private boolean clicked;    // checador que checa si se movio el objeto con tecla
@@ -115,11 +118,17 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         maxHeight = AlturaMaxima (angulo, velocidad)*100;
         maxDista = distMaxima (angulo, velocidad)*100;
         
-        System.out.println(maxHeight);
-        System.out.println(maxDista);
-        
+
         
         } while (maxHeight > tamanoY || (maxDista > tamanoX || maxDista < tamanoX/2) );
+        
+        velocidadX =  velocidad*Math.cos(Math.toRadians(angulo));
+        velocidadY =  velocidad*Math.sin(Math.toRadians(angulo));
+        
+        System.out.println(velocidad); 
+        System.out.println(velocidadX); 
+        System.out.println(velocidadY);
+        
         
         
 //        choqueConCanasta = new SoundClip("Images/explosion.wav");
@@ -298,10 +307,38 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void paint1(Graphics g) {
 
-       
+        
+       g.setColor(Color.WHITE);
+       g.fillOval(300, 300, 3, 3);
+       DrawParabola(g);
 
         
 
+    }
+    
+    void DrawParabola (Graphics g) {
+        
+      int xScreen = 0, yScreen = tamanoY;
+   
+      int vel = (int) velocidadY;
+    
+       
+      for ( int i = tamanoY; i >= 0; i-=gravedad ) {
+         
+     
+         xScreen = xScreen + 6;  
+         yScreen = yScreen + vel;
+         vel += gravedad;
+        
+         
+         
+         g.fillOval(xScreen, yScreen, 3, 3);
+     
+
+      }
+    
+      
+      
     }
 
     @Override
