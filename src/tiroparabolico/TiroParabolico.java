@@ -44,7 +44,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private double maxDista; // distancia maxima
     private final int panelScaleFactor = 300;
     private final int xPanelOrigin = 40, yPanelOrigin = 400;
-    // boleanos
+    private int xScreen = 0, yScreen = posInicialTiro;
+    private double tiempo;
+    int vel ;
+    
+// boleanos
     private boolean pausa;      // bool que checa si se pauso
     private boolean clicked;    // checador que checa si se movio el objeto con tecla
     private boolean presionado; // checa si se presiono el objeto para lanzarse
@@ -108,16 +112,16 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         // loop que me calcula el angulo y la velocidad correcto para que la maxDista y max Height
         //  no se saldran del applet
         do { 
-        velocidad = (5 + (int) (Math.random() * 8));
+        velocidad = 30;
         angulo = 10 + (Math.random()*70);
         
-        System.out.println(velocidad); 
-        System.out.println(angulo);
-
+       
         
-        maxHeight = AlturaMaxima (angulo, velocidad)*100;
-        maxDista = distMaxima (angulo, velocidad)*100;
+        maxHeight = AlturaMaxima (angulo, velocidad);
+        maxDista = distMaxima (angulo, velocidad);
         
+        System.out.println(maxHeight);
+        System.out.println(maxDista);
 
         
         } while (maxHeight > tamanoY || (maxDista > tamanoX || maxDista < tamanoX/2) );
@@ -125,9 +129,16 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         velocidadX =  velocidad*Math.cos(Math.toRadians(angulo));
         velocidadY =  velocidad*Math.sin(Math.toRadians(angulo));
         
-        System.out.println(velocidad); 
+        System.out.println(velocidadY); 
         System.out.println(velocidadX); 
-        System.out.println(velocidadY);
+        System.out.println(velocidad); 
+        System.out.println(angulo); 
+        vel = - (int) velocidadY ;
+        tiempo = (2*velocidadY)/gravedad;
+        
+        
+        
+        
         
         
         
@@ -241,6 +252,10 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void actualiza() {
 
+        
+        xScreen = xScreen + (int)velocidadX;  
+        yScreen = yScreen + vel;
+        vel +=1;
         if (clicked) {
             
                 //si es x, se le agrega la velocidad acumulada en eje X a la posicion
@@ -318,25 +333,18 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     
     void DrawParabola (Graphics g) {
         
-      int xScreen = 0, yScreen = tamanoY;
+      
    
-      int vel = (int) velocidadY;
-    
-       
-      for ( int i = tamanoY; i >= 0; i-=gravedad ) {
-         
+//      System.out.println(vel);
+//      System.out.println(xScreen);
+//      System.out.println(yScreen);
+//      System.out.println(" ");
+      
      
-         xScreen = xScreen + 6;  
-         yScreen = yScreen + vel;
-         vel += gravedad;
-        
-         
-         
-         g.fillOval(xScreen, yScreen, 3, 3);
+         g.fillOval(xScreen, yScreen, 10, 10);
      
 
-      }
-    
+      
       
       
     }
