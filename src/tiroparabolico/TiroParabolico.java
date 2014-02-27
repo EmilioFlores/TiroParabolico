@@ -34,7 +34,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private double velocidadY;
     private double velocidadX; 
     private double angulo; // angulo variable
-    private final int gravedad = 10; 
+    private final double gravedad = 1; 
     private final int posInicialTiro = 400; // empieza en posicion 100 
     private int tamanoY;
     private int tamanoX;
@@ -67,6 +67,18 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image foto3;
     private Image foto4;
     private Image foto5;
+    private Image foto6;
+    private Image foto7;
+    private Image foto8;
+    private Image foto9;
+    private Image foto10;
+    private Image foto11;
+    private Image foto12;
+    private Image foto13;
+    private Image foto14;
+    private Image foto15;
+    private Image foto16;
+    
     private Animacion anim;
     
     
@@ -76,6 +88,8 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private SoundClip sonidoAlLanzar; // sonido cuando se lanza la pelota 
   
     
+    // objetos
+    private Pelota granada;
     /**
      * @param args the command line arguments
      */
@@ -113,26 +127,22 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         //  no se saldran del applet
         do { 
         velocidad = 30;
-        angulo = 10 + (Math.random()*70);
+        angulo = 10 + (Math.random()*54);
         
        
         
         maxHeight = AlturaMaxima (angulo, velocidad);
         maxDista = distMaxima (angulo, velocidad);
         
-        System.out.println(maxHeight);
-        System.out.println(maxDista);
 
         
         } while (maxHeight > tamanoY || (maxDista > tamanoX || maxDista < tamanoX/2) );
-        
+       
         velocidadX =  velocidad*Math.cos(Math.toRadians(angulo));
-        velocidadY =  velocidad*Math.sin(Math.toRadians(angulo));
         
-        System.out.println(velocidadY); 
-        System.out.println(velocidadX); 
-        System.out.println(velocidad); 
-        System.out.println(angulo); 
+        velocidadY =  velocidad*Math.sin(Math.toRadians(angulo));
+        System.out.println(velocidadY);
+       
         vel = - (int) velocidadY ;
         tiempo = (2*velocidadY)/gravedad;
         
@@ -146,21 +156,44 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 //        choqueConSuelo = new SoundClip("Images/explosion.wav");
 //        sonidoAlLanzar = new SoundClip("Images/explosion.wav");
 //        
-//        foto1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
-//        foto2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
-//        foto3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
-//        foto4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
-//        foto5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Images/B1.png"));
-//        
-//        anim = new Animacion();
-//        
-//        anim.sumaCuadro(foto1, 200);
-//        anim.sumaCuadro(foto2, 200);
-//        anim.sumaCuadro(foto3, 200);
-//        anim.sumaCuadro(foto4, 200);
-//        anim.sumaCuadro(foto5, 200);
+        foto1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g1.png"));
+        foto2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g2.png"));
+        foto3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g3.png"));
+        foto4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g4.png"));
+        foto5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g5.png"));
+        foto6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g6.png"));
+        foto7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g7.png"));
+        foto8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g8.png"));
+        foto9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g9.png"));
+        foto10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g10.png"));
+        foto11 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g11.png"));
+        foto12 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g12.png"));
+        foto13 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g13.png"));
+        foto14 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g14.png"));
+        foto15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g15.png"));
+        foto16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g16.png"));
         
+        anim = new Animacion();
         
+        anim.sumaCuadro(foto1, 200);
+        anim.sumaCuadro(foto2, 200);
+        anim.sumaCuadro(foto3, 200);
+        anim.sumaCuadro(foto4, 200);
+        anim.sumaCuadro(foto5, 200);
+        anim.sumaCuadro(foto6, 200);
+        anim.sumaCuadro(foto7, 200);
+        anim.sumaCuadro(foto8, 200);
+        anim.sumaCuadro(foto9, 200);
+        anim.sumaCuadro(foto10, 200);
+        anim.sumaCuadro(foto11, 200);
+        anim.sumaCuadro(foto12, 200);
+        anim.sumaCuadro(foto13, 200);
+        anim.sumaCuadro(foto14, 200);
+        anim.sumaCuadro(foto15, 200);
+        anim.sumaCuadro(foto16, 200);
+        
+  
+        granada = new Pelota(-10, yPanelOrigin  - new ImageIcon(foto11).getIconHeight(), anim, velocidad);
     }
     
      /**
@@ -220,7 +253,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
             //Hace una pausa de 200 milisegundos
             try {
-                Thread.sleep(50);
+                Thread.sleep(60);
             } catch (InterruptedException ex) {
                 // no hace nada
             }
@@ -251,11 +284,12 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      * cada segmento de animacion.
      */
     public void actualiza() {
-
-        
-        xScreen = xScreen + (int)velocidadX;  
-        yScreen = yScreen + vel;
-        vel +=1;
+      
+        granada.setPosX(granada.getPosX() + (int) velocidadX);
+        granada.setPosY(granada.getPosY() + vel);
+//        xScreen = xScreen + (int)velocidadX;  
+//        yScreen = yScreen + vel;
+        vel +=2;
         if (clicked) {
             
                 //si es x, se le agrega la velocidad acumulada en eje X a la posicion
@@ -278,7 +312,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
         //Actualiza la animación en base al tiempo transcurrido
        // bueno.getAnimacion().actualiza(tiempoTranscurrido);
-
+       granada.getAnimacion().actualiza(tiempoTranscurrido);
         //Actualiza la animacion de los malos
     }
        
@@ -322,14 +356,17 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void paint1(Graphics g) {
 
-        
-       g.setColor(Color.WHITE);
-       g.fillOval(300, 300, 3, 3);
+       
+     if (granada.getAnimacion() != null) {
+
+       g.setColor(Color.BLACK);
+       
+       g.drawImage(granada.animacion.getImagen(), granada.getPosX(), granada.getPosY(), this);
+       g.fillRect(0,getHeight()-100,70,100);
        DrawParabola(g);
-
-        
-
-    }
+     
+     }
+   }
     
     void DrawParabola (Graphics g) {
         
@@ -340,7 +377,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 //      System.out.println(yScreen);
 //      System.out.println(" ");
       
-     
+         g.setColor(Color.WHITE);
          g.fillOval(xScreen, yScreen, 10, 10);
      
 
