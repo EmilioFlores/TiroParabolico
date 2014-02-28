@@ -17,32 +17,35 @@ import javax.swing.ImageIcon;
  */
 public class Base {
     
-    private int posX;
-    private int posY;
+    private double posX;
+    private double posY;
     private int velocidad;
     Animacion animacion;
+    private static int W;
+    private static int H;
+    
     
     // Método constructor del objeto 
-    public Base (int posX,int posY,Animacion animacion,int velocidad) {
+    public Base (double posX,double posY,Animacion animacion) {
         this.posX = posX;
         this.posY = posY;
         this.animacion = animacion;
-        this.velocidad = velocidad;
+   
     }
     // metodo que ajusta la posicion x
-    public void setPosX (int posX) {
+    public void setPosX (double posX) {
         this.posX = posX;
     }
     // método que regresa la posicion x
-    public int getPosX () {
+    public double getPosX () {
         return this.posX;
     }
     // metodo que ajusta la posicion y
-    public void setPosY (int posY) {
+    public void setPosY (double posY) {
         this.posY = posY;
     }
     // metodo que regresa la posicion y
-    public int getPosY () {
+    public double getPosY () {
         return this.posY;
     }
   
@@ -65,7 +68,7 @@ public class Base {
     }
     // metodo que me regresa un rectangulo con el perimetro de la imagen
     public Rectangle getPerimetro(){
-		return new Rectangle(getPosX(),getPosY(),getAncho(),getAlto());
+		return new Rectangle((int) getPosX(),(int) getPosY(),getAncho(),getAlto());
     }
     // metodo que me verifica si el objeto intersecta con el otro objeto. 
 //    public boolean intersecta(Malo obj){
@@ -74,12 +77,30 @@ public class Base {
      // metodo que me regresa un rectangulo con el perimetro de la imagen
    
 
-    public  int getVelocidad() {
-        return velocidad;
+
+    
+
+    public static void setW(int w) {
+        W = w;
     }
     
-    public  void setVelocidad(int velo) {
-        velocidad = velo;
+  
+    public static int getW() {
+        return W;
+    }
+    
+  
+    public static void setH(int h) {
+        H = h;
+    }
+    
+  
+    public static int getH() {
+        return H;
+    }
+    
+    public void actualiza(long tiempo) {
+        animacion.actualiza(tiempo);
     }
 
      public boolean checaIntersecion (int posX, int posY) {
@@ -87,7 +108,7 @@ public class Base {
         }
      
      public Rectangle cuadroAbajo () {
-        return new Rectangle (getPosX()+getAncho()/4, getPosY()+3*getAlto()/4, getAncho()/2, getAlto()/4);
+        return new Rectangle ((int) getPosX()+getAncho()/4, (int)getPosY()+3*getAlto()/4, getAncho()/2, getAlto()/4);
     }
     
 

@@ -31,10 +31,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
     // valores numericos
     private int velocidad; // velocidad constante 
-    private double velocidadY;
-    private double velocidadX; 
+    private int velocidadY;
+    private int velocidadX; 
     private double angulo; // angulo variable
-    private final double gravedad = 1; 
+    private final double gravedad = 1;
+    private int aceleracion;
     private final int posInicialTiro = 400; // empieza en posicion 100 
     private int tamanoY;
     private int tamanoX;
@@ -46,14 +47,20 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private final int xPanelOrigin = 40, yPanelOrigin = 400;
     private int xScreen = 0, yScreen = posInicialTiro;
     private double tiempo;
-    int vel ;
+    private double velMinX;
+    private double velMinY;
+    private double velMaxX;
+    private double velMaxY;
+    private int caidas;
+    private int vidas;
+    private int score;
     
 // boleanos
     private boolean pausa;      // bool que checa si se pauso
     private boolean clicked;    // checador que checa si se movio el objeto con tecla
     private boolean presionado; // checa si se presiono el objeto para lanzarse
     private boolean xClick; // booleano de que se movio la canasta
-    
+    private boolean chocado;
     //floating
     private long tiempoActual;  // tiempo actual
     private long tiempoInicial; // tiempo inicial
@@ -80,6 +87,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image foto16;
     
     private Animacion anim;
+    private Animacion animCanasta;
     
     
     // sounds
@@ -87,9 +95,12 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private SoundClip choqueConSuelo; // sonido si choca con el suelo
     private SoundClip sonidoAlLanzar; // sonido cuando se lanza la pelota 
   
-    
+    private long tiempoAire;
+    private long tMensaje;
+   
     // objetos
     private Pelota granada;
+    private Canasta canasta;
     /**
      * @param args the command line arguments
      */
@@ -111,45 +122,32 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     
     public double distMaxima (double angulo, int velocidad) {
         return ((velocidad*velocidad)*Math.sin(Math.toRadians(2*angulo)))/(gravedad);
-    
     }
+    
+    
     void init () {
     //init     
+        
+        
         addKeyListener(this);
         addMouseListener(this);
         setSize(1000, 500);
         setBackground(Color.PINK);
+        Base.setW(getWidth());
+        Base.setH(getHeight());
         
         tamanoY = posInicialTiro;
         tamanoX = getWidth();
-       
+        caidas = 0;
+        vidas = 4;
+        score = 0;
         // loop que me calcula el angulo y la velocidad correcto para que la maxDista y max Height
         //  no se saldran del applet
-        do { 
-        velocidad = 30;
-        angulo = 10 + (Math.random()*54);
-        
        
         
-        maxHeight = AlturaMaxima (angulo, velocidad);
-        maxDista = distMaxima (angulo, velocidad);
-        
-
-        
-        } while (maxHeight > tamanoY || (maxDista > tamanoX || maxDista < tamanoX/2) );
-       
-        velocidadX =  velocidad*Math.cos(Math.toRadians(angulo));
-        
-        velocidadY =  velocidad*Math.sin(Math.toRadians(angulo));
-        System.out.println(velocidadY);
-       
-        vel = - (int) velocidadY ;
-        tiempo = (2*velocidadY)/gravedad;
-        
-        
-        
-        
-        
+        chocado = false;
+        tMensaje = 500;
+        tiempo = System.currentTimeMillis() - tMensaje - 1;    
         
         
 //        choqueConCanasta = new SoundClip("Images/explosion.wav");
@@ -174,6 +172,10 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         foto16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g16.png"));
         
         anim = new Animacion();
+        animCanasta = new Animacion(); 
+        Image fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g6.png"));
+        
+        animCanasta.sumaCuadro(fotoCanasta, 200);
         
         anim.sumaCuadro(foto1, 200);
         anim.sumaCuadro(foto2, 200);
@@ -192,8 +194,12 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         anim.sumaCuadro(foto15, 200);
         anim.sumaCuadro(foto16, 200);
         
-  
-        granada = new Pelota(-10, yPanelOrigin  - new ImageIcon(foto11).getIconHeight(), anim, velocidad);
+        
+         canasta = new Canasta(0, 0, animCanasta);
+         canasta.setPosX((int) (Math.random() * (getWidth() / 2 - canasta.getAncho())) + getWidth() / 2);
+       //  canasta.setPosY(getHeight() - 3 * canasta.getAlto() / 2);
+         canasta.setPosY(300);
+        granada = new Pelota(-10, yPanelOrigin  - new ImageIcon(foto11).getIconHeight(), anim);
     }
     
      /**
@@ -268,7 +274,27 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void checaColision() {
 
-        
+         if (canasta.getPosX() < getWidth() / 2) {
+            canasta.setPosX(getWidth() / 2);
+        }
+        if (canasta.getPosX() + canasta.getAncho() > getWidth()) {
+            canasta.setPosX(getWidth() - canasta.getAncho());
+        }
+
+        if (granada.getPosY() > getHeight() + 10) {
+            granada.volverInicio();
+            caidas++;
+            if (caidas % 3 == 0) {
+                vidas--;
+                Pelota.setAceleracion(Pelota.getAceleracion() + 50);
+             
+            }
+        }
+        if (granada.checaIntersecion((int) canasta.getPosX(), (int) canasta.getPosY()) && !chocado) {
+            score += 2;
+            chocado = true;
+            System.out.println (" choco ");
+        }
         
 
 
@@ -284,37 +310,44 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      * cada segmento de animacion.
      */
     public void actualiza() {
-      
-        granada.setPosX(granada.getPosX() + (int) velocidadX);
-        granada.setPosY(granada.getPosY() + vel);
+        
+        long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
+        tiempo += tiempoTranscurrido;
+        
+        
+        granada.avanza();
+//        setDoublePosX(x + vx * time);
+//
+//        setDoublePosY(y - (vy*time - 0.5*aceleracion*time*time));
 //        xScreen = xScreen + (int)velocidadX;  
 //        yScreen = yScreen + vel;
-        vel +=2;
-        if (clicked) {
-            
-                //si es x, se le agrega la velocidad acumulada en eje X a la posicion
-                
-
-                //se da el valor de 1 a la velocidad en Y para resetearlo
-            } // si se mueve en Y, entonces es un movimiento vertical, y se resetea el valor de x
-            else {
-                
+       
+       
+        
+           if (canasta.getMoveLeft()) {
+            canasta.setPosX(canasta.getPosX() - 3);
+            }
+            if (canasta.getMoveRight()) {
+                canasta.setPosX(canasta.getPosX() + 3);
             }
 
+        if ( !pausa ) {
+            if ( clicked ) {
+                 granada.getAnimacion().actualiza(tiempoTranscurrido);
+            }
+           
+        }
         
-
-        //Determina el tiempo que ha transcurrido desde que el Applet inicio su ejecución
-        long tiempoTranscurrido
-                = System.currentTimeMillis() - tiempoActual;
-
-        //Guarda el tiempo actual
-        tiempoActual += tiempoTranscurrido;
-
-        //Actualiza la animación en base al tiempo transcurrido
-       // bueno.getAnimacion().actualiza(tiempoTranscurrido);
-       granada.getAnimacion().actualiza(tiempoTranscurrido);
-        //Actualiza la animacion de los malos
-    }
+        if (chocado) {
+          
+                chocado = false;
+                granada.volverInicio();
+            }
+        if (granada.getMovimiento()) {
+            granada.actualiza(tiempoTranscurrido);
+        }
+        
+    }  
        
         
 
@@ -361,11 +394,23 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
        g.setColor(Color.BLACK);
        
-       g.drawImage(granada.animacion.getImagen(), granada.getPosX(), granada.getPosY(), this);
+       g.drawImage(granada.animacion.getImagen(), (int) granada.getPosX(), (int) granada.getPosY(), this);
+       
+       
        g.fillRect(0,getHeight()-100,70,100);
        DrawParabola(g);
      
      }
+        g.setColor(Color.green);
+        g.drawString("Score: " + score, 20, 55);
+        g.setColor(Color.blue);
+        g.drawString("Caídas: " + caidas, 20, 80);
+        g.setColor(Color.red);
+        g.drawString("Vidas: " + vidas, 20, 105);
+     
+       if (canasta != null && canasta.animacion.getImagen() != null) {
+            g.drawImage(canasta.animacion.getImagen(), (int) canasta.getPosX(), (int) canasta.getPosY(), this);
+        }
    }
     
     void DrawParabola (Graphics g) {
@@ -386,11 +431,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
       
     }
 
-    @Override
     public void keyReleased(KeyEvent e) {
-
-        if (e.getKeyCode() == VK_P) {
-            pausa = !pausa;
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            canasta.setMoveLeft(false);
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            canasta.setMoveRight(false);
         }
     }
 
@@ -408,16 +453,21 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void keyPressed(KeyEvent e) {
 
-        clicked = true;
-        if (e.getKeyCode() == KeyEvent.VK_A) {    //Presiono flecha izquierda
-            x = -15;
-            xClick = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_D) {    //Presiono flecha derecha
-            x = 15;
-            xClick = true;
-        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            canasta.setMoveLeft(true);
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            canasta.setMoveRight(true);
+        } else if (e.getKeyCode() == KeyEvent.VK_P) {
+            if (!pausa) {
+                pausa = true;
+                granada.pausa();
+            } else {
+                pausa = false;
+                granada.despausa();
+            }
+            
     }
-
+    }
     public void mousePressed(MouseEvent e) {
         
     }
@@ -427,7 +477,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     
     @Override
     public void mouseClicked(MouseEvent e) {
-   //     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if ( !granada.getMovimiento() && granada.checaIntersecion(e.getX(), e.getY()))
+        {
+            clicked = true;
+            granada.arroja();
+        }
     }
 
     
