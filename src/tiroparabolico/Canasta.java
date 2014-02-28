@@ -12,7 +12,30 @@ package tiroparabolico;
  */
 public class Canasta extends Base {
     
-    public Canasta(int posX, int posY, Animacion animacion,int velocidad) {
-        super(posX, posY, animacion, velocidad); 
+    private boolean moveRight;
+    private boolean moveLeft;
+    
+    
+    public Canasta(int posX, int posY, Animacion animacion) {
+        super(posX, posY, animacion); 
+        moveRight = false;
+        moveLeft = false;
+    }
+    
+    
+     public void setMoveRight(boolean b) {
+        moveRight = b;
+    }
+    
+    public boolean getMoveRight() {
+        return moveRight;
+    }
+    
+    public void setMoveLeft(boolean b) {
+        moveLeft = b;
+    }
+    
+    public boolean getMoveLeft() {
+        return moveLeft;
     }
 }
