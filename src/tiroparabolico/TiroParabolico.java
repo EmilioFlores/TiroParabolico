@@ -316,7 +316,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         tiempo += tiempoTranscurrido;
 
         granada.avanza();
-//        setDoublePosX(x + vx * time);
+//        setiempotDoublePosX(x + vx * time);
 //
 //        setDoublePosY(y - (vy*time - 0.5*aceleracion*time*time));
 //        xScreen = xScreen + (int)velocidadX;  
