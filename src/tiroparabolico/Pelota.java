@@ -52,8 +52,8 @@ public class Pelota extends Base{
         double maxVelY = .94*getMaxVelY();
         double minVelY = .3*maxVelY;
         velY = Math.random()*(maxVelY - minVelY) + minVelY;
-        double maxVelX = 350;
-        double minVx = 220;
+        double maxVelX = 310;
+        double minVx = 300;
 //        double maxVelX = .97*getVx(getW() - getAncho() + 10, getH() - getAlto());
 //        double minVx = getVx(getW()/2 + 20, getH() - 2*getAlto());
         velX = Math.random()*(maxVelX - minVx) + minVx;

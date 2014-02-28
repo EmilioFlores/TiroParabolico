@@ -182,22 +182,26 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         foto14 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g14.png"));
         foto15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g15.png"));
         foto16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g16.png"));
-       fotogranada=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada.png"));
-      fotogranada1=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada1.png"));
-      fotogranada2=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada2.png"));
-        pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/pause.png"));
         
-        fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket.png"));
-        fotoCanasta1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket1.png"));
-        fotoCanasta2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
+       fotogranada=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada.png"));
+       fotogranada1=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada1.png"));
+       fotogranada2=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada2.png"));
+     
+       pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/pause.png"));
+        
+       fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket1.png"));
+       fotoCanasta1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
+       
+       //fotoCanasta2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
         tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/inst.png"));
+       
         anim = new Animacion();
         animCanasta = new Animacion();
         animg= new Animacion();
 
         animCanasta.sumaCuadro(fotoCanasta, 200);
         animCanasta.sumaCuadro(fotoCanasta1, 200);
-        animCanasta.sumaCuadro(fotoCanasta2, 200);
+      //  animCanasta.sumaCuadro(fotoCanasta2, 200);
         
 
         anim.sumaCuadro(foto1, 200);
@@ -318,7 +322,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
             }
         }
-        if (granada.checaIntersecion((int) canasta.getPosX(), (int) canasta.getPosY()) && !chocado) {
+        if (granada.intersectaCentro(canasta) && !chocado) {
             score += 2;
             chocado = true;
             if (sonido) {
@@ -340,7 +344,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         tiempo += tiempoTranscurrido;
 
         granada.avanza();
-//        setDoublePosX(x + vx * time);
+//        setiempotDoublePosX(x + vx * time);
 //
 //        setDoublePosY(y - (vy*time - 0.5*aceleracion*time*time));
 //        xScreen = xScreen + (int)velocidadX;  
@@ -361,6 +365,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         if (granada.getMovimiento()) {
             granada.actualiza(tiempoTranscurrido);
         }
+        
+        canasta.animacion.actualiza(tiempoTranscurrido);
+        
+        
+        
 
     }
 
