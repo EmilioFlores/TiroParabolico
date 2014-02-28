@@ -3,11 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Emilio/Documents/GitHub/TiroParabolico/src/tiroparabolico/Base.java</file>
             <file>file:/C:/Users/Emilio/Documents/GitHub/TiroParabolico/src/tiroparabolico/TiroPara.java</file>
             <file>file:/C:/Users/Emilio/Documents/GitHub/TiroParabolico/src/tiroparabolico/Pelota.java</file>
             <file>file:/C:/Users/Emilio/Documents/GitHub/TiroParabolico/src/tiroparabolico/Canasta.java</file>
             <file>file:/C:/Users/Emilio/Documents/GitHub/TiroParabolico/src/tiroparabolico/TiroParabolico.java</file>
+=======
+            <file>file:/C:/Users/Jerry/Documents/GitHub/TiroParabolico/src/tiroparabolico/TiroPara.java</file>
+            <file>file:/C:/Users/Jerry/Documents/GitHub/TiroParabolico/src/tiroparabolico/Pelota.java</file>
+            <file>file:/C:/Users/Jerry/Documents/GitHub/TiroParabolico/src/tiroparabolico/Base.java</file>
+            <file>file:/C:/Users/Jerry/Documents/GitHub/TiroParabolico/src/tiroparabolico/Canasta.java</file>
+            <file>file:/C:/Users/Jerry/Documents/GitHub/TiroParabolico/src/tiroparabolico/TiroParabolico.java</file>
+>>>>>>> 7d7c46b7da6d26513ece4149530bda3a9cdffc4e
         </group>
     </open-files>
 </project-private>

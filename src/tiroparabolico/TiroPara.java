@@ -16,5 +16,6 @@ public class TiroPara {
          TiroParabolico test = new TiroParabolico();
          test.setVisible(true); 
          test.setDefaultCloseOperation(test.EXIT_ON_CLOSE);
+         
     }
 }

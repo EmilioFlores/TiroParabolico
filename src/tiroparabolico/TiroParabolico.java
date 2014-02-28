@@ -69,6 +69,9 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image dbImage;	// Imagen a proyectar	
     private Graphics dbg;	// Objeto grafico
     private Image foto1;
+    private Image fotogranada;
+    private Image fotogranada1;
+    private Image fotogranada2;
     private Image foto2;
     private Image foto3;
     private Image foto4;
@@ -85,11 +88,15 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image foto15;
     private Image foto16;
     private Image fotoCanasta;
+    private Image fotoCanasta1;
+    private Image fotoCanasta2;
     private Image tableroInstrucciones;
     private Image pausaImagen; // imagen de causado
+    private Image background; 
 
     private Animacion anim;
     private Animacion animCanasta;
+    private Animacion animg;
 
     // sounds
     private SoundClip choqueConCanasta; // sonido cuando la pelota choca con canasta
@@ -133,6 +140,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         addMouseListener(this);
         setSize(1000, 500);
       
+        
+        
+        
+        background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/back.jpg"));
+        
         Base.setW(getWidth());
         Base.setH(getHeight());
 
@@ -151,7 +163,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         tiempo = System.currentTimeMillis() - tMensaje - 1;
 
         choqueConCanasta = new SoundClip("Mono/coin.wav");
-        choqueConSuelo = new SoundClip("Mono/coin.wav");
+        choqueConSuelo = new SoundClip("Mono/exp.wav");
 //        sonidoAlLanzar = new SoundClip("Images/explosion.wav");
 //        
         foto1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g1.png"));
@@ -170,15 +182,27 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         foto14 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g14.png"));
         foto15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g15.png"));
         foto16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g16.png"));
-       
-        pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/pause.png"));
         
-        fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g6.png"));
-        tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g7.png"));
+       fotogranada=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada.png"));
+       fotogranada1=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada1.png"));
+       fotogranada2=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada2.png"));
+     
+       pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/pause.png"));
+        
+       fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket1.png"));
+       fotoCanasta1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
+       
+       //fotoCanasta2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
+        tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/inst.png"));
+       
         anim = new Animacion();
         animCanasta = new Animacion();
+        animg= new Animacion();
 
         animCanasta.sumaCuadro(fotoCanasta, 200);
+        animCanasta.sumaCuadro(fotoCanasta1, 200);
+      //  animCanasta.sumaCuadro(fotoCanasta2, 200);
+        
 
         anim.sumaCuadro(foto1, 200);
         anim.sumaCuadro(foto2, 200);
@@ -196,12 +220,16 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         anim.sumaCuadro(foto14, 200);
         anim.sumaCuadro(foto15, 200);
         anim.sumaCuadro(foto16, 200);
+        
+        animg.sumaCuadro(fotogranada, 200);
+        animg.sumaCuadro(fotogranada1, 200);
+        animg.sumaCuadro(fotogranada2, 200);
 
         canasta = new Canasta(0, 0, animCanasta);
         canasta.setPosX((int) (Math.random() * (getWidth() / 2 - canasta.getAncho())) + getWidth() / 2);
         //  canasta.setPosY(getHeight() - 3 * canasta.getAlto() / 2);
-        canasta.setPosY(300);
-        granada = new Pelota(-10, yPanelOrigin - new ImageIcon(foto11).getIconHeight(), anim);
+        canasta.setPosY(400);
+        granada = new Pelota(-10, yPanelOrigin - new ImageIcon(fotogranada).getIconHeight(), animg);
     }
 
     /**
@@ -294,7 +322,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
             }
         }
-        if (granada.checaIntersecion((int) canasta.getPosX(), (int) canasta.getPosY()) && !chocado) {
+        if (granada.intersectaCentro(canasta) && !chocado) {
             score += 2;
             chocado = true;
             if (sonido) {
@@ -323,10 +351,10 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 //        yScreen = yScreen + vel;
 
         if (canasta.getMoveLeft()) {
-            canasta.setPosX(canasta.getPosX() - 3);
+            canasta.setPosX(canasta.getPosX() - 6);
         }
         if (canasta.getMoveRight()) {
-            canasta.setPosX(canasta.getPosX() + 3);
+            canasta.setPosX(canasta.getPosX() + 6);
         }
 
         if (chocado) {
@@ -337,6 +365,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         if (granada.getMovimiento()) {
             granada.actualiza(tiempoTranscurrido);
         }
+        
+        canasta.animacion.actualiza(tiempoTranscurrido);
+        
+        
+        
 
     }
 
@@ -370,11 +403,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      * de la clase Container.<P>
      * En este metodo se dibuja la imagen con la posicion actualizada, ademas
      * que cuando la imagen es cargada te despliega una advertencia.
-     *
+     *ph
      * @param g es el <code>objeto grafico</code> usado para dibujar.
      */
     public void paint1(Graphics g) {
-
+g.drawImage(background, 0, 0, this);
         
         
         if (granada.getAnimacion() != null) {
@@ -392,6 +425,12 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         g.drawString("Caídas: " + caidas, 20, 80);
         g.setColor(Color.red);
         g.drawString("Vidas: " + vidas, 20, 105);
+        g.setColor(Color.black);
+        g.drawString("P-Pausa ", 20, 130);
+        g.drawString("I-Instrucciones ", 20, 155);
+        g.drawString("G-Guardar ", 20, 180);
+        g.drawString("C-Cargar ", 20, 205);
+        g.drawString("Flechas-Mueve la canasta ", 20, 230);
 
         
         if (canasta != null && canasta.animacion.getImagen() != null) {
@@ -407,6 +446,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
                 g.drawImage(pausaImagen,getWidth()/2 - new ImageIcon(pausaImagen).getIconWidth()/2, getHeight()/2 - new ImageIcon(pausaImagen).getIconHeight()/2, this);
             }
         
+     
         
     }
 

@@ -107,10 +107,25 @@ public class Base {
             return getPerimetro().contains(new Point(posX,posY));
         }
      
-     public Rectangle cuadroAbajo () {
-        return new Rectangle ((int) getPosX()+getAncho()/4, (int)getPosY()+3*getAlto()/4, getAncho()/2, getAlto()/4);
+    
+     
+        public boolean intersecta(Base obj) {
+        return getPerimetro().intersects(obj.getPerimetro());
+    }
+
+    public boolean intersectaCentro(Base obj) {
+        return getCentro().intersects(obj.getCentroSup());
     }
     
+     public Rectangle getCentro() {
+        return new Rectangle((int) getPosX() + getAncho()/4, (int) getPosY() + 3*getAlto()/8, 
+                getAncho()/2, getAlto()/4);
+    }
+    
+    public Rectangle getCentroSup() {
+        return new Rectangle((int) getPosX() + getAncho()/4, (int) getPosY(), 
+                getAncho()/2, getAlto()/4);
+    }
 
                 
 }
