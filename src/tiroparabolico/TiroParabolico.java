@@ -32,54 +32,36 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
- *
- * @author Emilio
+ * @author daniel rodriguez
+ * @author Emilio Flores
  */
 public class TiroParabolico extends JFrame implements KeyListener, MouseListener, Runnable {
 
-    // valores numericos
-    private int velocidad; // velocidad constante 
-    private int velocidadY;
-    private int velocidadX;
-    private double angulo; // angulo variable
-    private final double gravedad = 1;
-    private int aceleracion;
+ // valores numericos
     private final int posInicialTiro = 400; // empieza en posicion 100 
-    private int tamanoY;
-    private int tamanoX;
-    private int x; // posicion x de la canasta
-    private double radianes; // radianes
-    private double maxHeight; // altura maxima
-    private double maxDista; // distancia maxima
-    private final int panelScaleFactor = 300;
-    private final int xPanelOrigin = 40, yPanelOrigin = 400;
-    private int xScreen = 0, yScreen = posInicialTiro;
-    private double tiempo;
-    private double velMinX;
-    private double velMinY;
-    private double velMaxX;
-    private double velMaxY;
+    private final int xPanelOrigin = 40;
+    private final int yPanelOrigin = 400;
     private int caidas;
     private int vidas;
     private int score;
 
-    
+// strings
     private String[] arr;  
     private final String nombreArchivo = "guardar.txt";
     
 // boleanos
     private boolean pausa;      // bool que checa si se pauso
-    private boolean clicked;    // checador que checa si se movio el objeto con tecla
-    private boolean presionado; // checa si se presiono el objeto para lanzarse
-    private boolean xClick; // booleano de que se movio la canasta
+    private boolean clicked;    // checador que checa si se movio el objeto con tecl
     private boolean chocado;
     private boolean instrucciones;
     private boolean sonido;
+
 //floating
     private long tiempoActual;  // tiempo actual
-    private long tiempoInicial; // tiempo inicial
+    private long tiempoAire;
+    private long tMensaje;
 
-    // images
+ // images
     private Image dbImage;	// Imagen a proyectar	
     private Graphics dbg;	// Objeto grafico
     private Image foto1;
@@ -103,145 +85,91 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image foto16;
     private Image fotoCanasta;
     private Image fotoCanasta1;
-    private Image fotoCanasta2;
     private Image tableroInstrucciones;
-    private Image pausaImagen; // imagen de causado
+    private Image pausaImagen; 
     private Image background; 
 
+// animaciones
     private Animacion anim;
     private Animacion animCanasta;
     private Animacion animg;
 
-    // sounds
+// sounds
     private SoundClip choqueConCanasta; // sonido cuando la pelota choca con canasta
     private SoundClip choqueConSuelo; // sonido si choca con el suelo
 
-    private long tiempoAire;
-    private long tMensaje;
+   
 
     // objetos
     private Pelota granada;
     private Canasta canasta;
 
-    /**
-     * @param args the command line arguments
-     */
-
+   
+/**
+ * Se crea un objeto de la misma clase
+ */
     public TiroParabolico() {
         init();
         start();
     }
 
     /**
-     * Se inicializan las variables en el metodo <I>Init</> @returns nada
+     * Se inicializan las variables en el metodo <I>Init</> 
+     * Se inicializa el tamaño del applet en 1000x500
      *
      */
-
-    public double AlturaMaxima(double angulo, int velocidad) {
-
-        return ((velocidad * velocidad) * Math.sin(Math.toRadians(angulo)) * Math.sin(Math.toRadians(angulo))) / (2 * gravedad);
-
-    }
-
-    public double distMaxima(double angulo, int velocidad) {
-        return ((velocidad * velocidad) * Math.sin(Math.toRadians(2 * angulo))) / (gravedad);
-    }
-
     void init() {
-    //init     
+ 
 
         addKeyListener(this);
         addMouseListener(this);
         setSize(1000, 500);
-      
+  
         
-        
-        
-        background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/back.jpg"));
-        
+       
         Base.setW(getWidth());
         Base.setH(getHeight());
-
-        tamanoY = posInicialTiro;
-        tamanoX = getWidth();
+    
         caidas = 0;
         vidas = 5;
         score = 0;
-        // loop que me calcula el angulo y la velocidad correcto para que la maxDista y max Height
-        //  no se saldran del applet
-
+        
+        
         chocado = false;
         instrucciones = false;
         sonido = true;
-        tMensaje = 500;
-        tiempo = System.currentTimeMillis() - tMensaje - 1;
+        
+       
 
         choqueConCanasta = new SoundClip("Mono/coin.wav");
         choqueConSuelo = new SoundClip("Mono/exp.wav");
-//        sonidoAlLanzar = new SoundClip("Images/explosion.wav");
-//        
-        foto1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g1.png"));
-        foto2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g2.png"));
-        foto3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g3.png"));
-        foto4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g4.png"));
-        foto5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g5.png"));
-        foto6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g6.png"));
-        foto7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g7.png"));
-        foto8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g8.png"));
-        foto9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g9.png"));
-        foto10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g10.png"));
-        foto11 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g11.png"));
-        foto12 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g12.png"));
-        foto13 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g13.png"));
-        foto14 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g14.png"));
-        foto15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g15.png"));
-        foto16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/g16.png"));
+    
+      
         
        fotogranada=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada.png"));
        fotogranada1=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada1.png"));
        fotogranada2=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada2.png"));
      
-       pausaImagen = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/pause.png"));
         
        fotoCanasta = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket1.png"));
        fotoCanasta1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
        
-       //fotoCanasta2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
+       background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/back.jpg"));
        tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/instruccionesTiroParabolico.jpg"));
        
-        anim = new Animacion();
+        
+        
         animCanasta = new Animacion();
         animg= new Animacion();
 
         animCanasta.sumaCuadro(fotoCanasta, 700);
-        animCanasta.sumaCuadro(fotoCanasta1, 700);
-      //  animCanasta.sumaCuadro(fotoCanasta2, 200);
-        
-
-        anim.sumaCuadro(foto1, 200);
-        anim.sumaCuadro(foto2, 200);
-        anim.sumaCuadro(foto3, 200);
-        anim.sumaCuadro(foto4, 200);
-        anim.sumaCuadro(foto5, 200);
-        anim.sumaCuadro(foto6, 200);
-        anim.sumaCuadro(foto7, 200);
-        anim.sumaCuadro(foto8, 200);
-        anim.sumaCuadro(foto9, 200);
-        anim.sumaCuadro(foto10, 200);
-        anim.sumaCuadro(foto11, 200);
-        anim.sumaCuadro(foto12, 200);
-        anim.sumaCuadro(foto13, 200);
-        anim.sumaCuadro(foto14, 200);
-        anim.sumaCuadro(foto15, 200);
-        anim.sumaCuadro(foto16, 200);
-        
+        animCanasta.sumaCuadro(fotoCanasta1, 700);        
         animg.sumaCuadro(fotogranada, 200);
         animg.sumaCuadro(fotogranada1, 200);
         animg.sumaCuadro(fotogranada2, 200);
 
         canasta = new Canasta(0, 0, animCanasta);
         canasta.setPosX((int) (Math.random() * (getWidth() / 2 - canasta.getAncho())) + getWidth() / 2);
-        //  canasta.setPosY(getHeight() - 3 * canasta.getAlto() / 2);
         canasta.setPosY(400);
         granada = new Pelota(30, yPanelOrigin - new ImageIcon(fotogranada).getIconHeight(), animg);
     }
@@ -316,14 +244,19 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void checaColision() {
 
+        // no se mueve menos de la mitdad la canasta
         if (canasta.getPosX() < getWidth() / 2) {
             canasta.setPosX(getWidth() / 2);
         }
+        
+        // No se sale del applet la canasta
         if (canasta.getPosX() + canasta.getAncho() > getWidth()) {
             canasta.setPosX(getWidth() - canasta.getAncho());
         }
 
+        // si la granada choco con el suelo
         if (granada.getPosY() > getHeight() + 10 ) {
+           
             if (sonido) {
                 choqueConSuelo.play();
             }
@@ -336,9 +269,12 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
             }
         }
+        
+        // si la granada choco con la canasta
         if (granada.intersectaCentro(canasta) && !chocado) {
             score += 2;
            granada.volverInicio();
+           chocado = true;
             if (sonido) {
                 choqueConCanasta.play();
             }
@@ -356,14 +292,10 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
 
         
         long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
-        tiempo += tiempoTranscurrido;
+       
         
-        //granada.avanza();
-//        setiempotDoublePosX(x + vx * time);
-//
-//        setDoublePosY(y - (vy*time - 0.5*aceleracion*time*time));
-//        xScreen = xScreen + (int)velocidadX;  
-//        yScreen = yScreen + vel;
+        granada.avanza();
+
 
         if (canasta.getMoveLeft()) {
             canasta.setPosX(canasta.getPosX() - 6);
@@ -377,8 +309,8 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
             granada.actualiza(tiempoTranscurrido);
             
         }
-        
-        canasta.animacion.actualiza(tiempoTranscurrido);
+        canasta.actualiza(tiempoTranscurrido);
+       
         
        
        
@@ -452,21 +384,33 @@ g.drawImage(background, 0, 0, this);
                     getHeight() / 2 - new ImageIcon(tableroInstrucciones).getIconHeight() / 2, this);    // Tablero de instrucciones
         }
         if (pausa) {
-               // g.drawImage(pausaImagen.getImage(), getWidth()/2 - pausaImagen.getIconWidth()/2, getHeight()/2 - pausaImagen.getIconHeight()/2 , this);
                 g.drawImage(pausaImagen,getWidth()/2 - new ImageIcon(pausaImagen).getIconWidth()/2, getHeight()/2 - new ImageIcon(pausaImagen).getIconHeight()/2, this);
             }
         
      
         
     }
+    
+    /**
+     * Método para grabar archivo que envia todas las variables del juego dentro de
+     * un string, el cual es guardado con el nombre <code> NombreArchivo </code>
+     * @throws IOException 
+     */
     public void grabaArchivo() throws IOException {
                                                           
                 PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
-                fileOut.println(score + " " + caidas + " " + vidas + " " + granada.getDatos() +" " +  chocado);
+                fileOut.println(score + " " + caidas + " " + vidas + " " + granada.getDatos() 
+                        +" " +  clicked + " " + chocado + " " + pausa + " " + instrucciones + " " + sonido + " " + 
+                        canasta.getPosX());
                 fileOut.close();
     }
     
     
+    /**
+     * Método que lee el <code> nombreArchivo</code> que contiene una linea con todos los 
+     * valores utilizados en el juego para volverse a cargar
+     * @throws IOException 
+     */
 public void leeArchivo() throws IOException {
                                                           
                 BufferedReader fileIn;
@@ -484,7 +428,12 @@ public void leeArchivo() throws IOException {
                    granada.setPosX(Double.parseDouble(arr[5]));
                    granada.setPosY(Double.parseDouble(arr[6]));
                    granada.setDatos(arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], arr[9]);
-                   chocado = Boolean.parseBoolean(arr[10]);
+                   clicked = Boolean.parseBoolean(arr[10]);
+                   chocado = Boolean.parseBoolean(arr[11]);
+                   pausa = Boolean.parseBoolean(arr[12]);
+                   instrucciones = Boolean.parseBoolean(arr[13]);
+                   sonido = Boolean.parseBoolean(arr[14]);
+                   canasta.setPosX(Double.parseDouble(arr[15]));
                   
                     fileIn.close();
                 } catch (FileNotFoundException e){
@@ -492,6 +441,10 @@ public void leeArchivo() throws IOException {
 
 }
 
+    /**
+     * Método que identifica si se movio hacia algun lado la canasta
+     * @param e 
+     */
     public void keyReleased(KeyEvent e) {
         
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -583,6 +536,10 @@ public void leeArchivo() throws IOException {
 
     }
 
+    /**
+     * Si se preciono el mouse sobre el objeto granada
+     * @param e 
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         if (!granada.getMovimiento() && granada.checaIntersecion(e.getX(), e.getY())) {

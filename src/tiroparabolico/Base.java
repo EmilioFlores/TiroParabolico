@@ -12,11 +12,13 @@ import javax.swing.ImageIcon;
  */
 
 /**
- *
- * @author Emilio
+ * @author daniel rodriguez
+ * @author Emilio Flores
  */
 public class Base {
-    
+    /**
+     * Se inicializan las variables de la clase Padre
+     */
     private double posX;
     private double posY;
     private int velocidad;
@@ -25,103 +27,175 @@ public class Base {
     private static int H;
     
     
-    // Método constructor del objeto 
+    /**
+     * Método constructor de la clase Base
+     * @param posX posicion del objeto
+     * @param posY posicion del objeto
+     * @param animacion  animacion dada para el objeto
+     */
     public Base (double posX,double posY,Animacion animacion) {
         this.posX = posX;
         this.posY = posY;
         this.animacion = animacion;
    
     }
-    // metodo que ajusta la posicion x
+    
+    /**
+     * Método que fija una posicion X
+     * @param posX 
+     */
     public void setPosX (double posX) {
         this.posX = posX;
     }
-    // método que regresa la posicion x
+    
+    /**
+     * Método que regresa la posicion actual del objeto en X
+     * @return posX
+     */
     public double getPosX () {
         return this.posX;
     }
-    // metodo que ajusta la posicion y
+    
+    /**
+     * Método que fija la posicion Y del objeto
+     * @param posY 
+     */
     public void setPosY (double posY) {
         this.posY = posY;
     }
-    // metodo que regresa la posicion y
+    
+    /**
+     * Método que regresa la posicion actual del objeto en Y
+     * @return 
+     */
     public double getPosY () {
         return this.posY;
     }
   
   
-    // metodo que ajusta la imagen del objeto
+   /** 
+    * Método que fija una animacion para el objeto
+    * @param anim 
+    */
     public void setAnimacion (Animacion anim) {
         this.animacion = anim;
     }
-    // metodo que regresa la imagen
+    
+    /** 
+     * Método que regresa la <code> Animacion </code> del objeto
+     * @return Anim
+     */
     public Animacion getAnimacion () {
         return this.animacion;
     }
-    // metodo que calcula lo ancho de la imagen
+    
+    /**
+     * Método que regresa el ancho del objeto
+     * @return int ancho 
+     */
     public int getAncho () {
         return new ImageIcon(this.animacion.getImagen()).getIconWidth();
     }
-    // metodo que calcula lo alto de la imagen
+    
+    /**
+     * Método que regresa el alto del objeto
+     * @return int alto
+     */
     public int getAlto() {
         return new ImageIcon (this.animacion.getImagen()).getIconHeight();
     }
-    // metodo que me regresa un rectangulo con el perimetro de la imagen
+    
+   /**
+    * Método que regresa un perimetro dado unas cordenadas
+    * @return Rectangle
+    */
     public Rectangle getPerimetro(){
 		return new Rectangle((int) getPosX(),(int) getPosY(),getAncho(),getAlto());
     }
-    // metodo que me verifica si el objeto intersecta con el otro objeto. 
-//    public boolean intersecta(Malo obj){
-//		return getPerimetro().intersects(obj.getPerimetro());
-//	}
-     // metodo que me regresa un rectangulo con el perimetro de la imagen
    
-
-
-    
-
+    /**
+     * Método que asigna el tamaño estatico del applet
+     * @param w 
+     */
     public static void setW(int w) {
         W = w;
     }
     
-  
+  /**
+   * Método que me regresa el tamaño estatico de mi applet
+   * @return W que es el width
+   */
     public static int getW() {
         return W;
     }
     
-  
+    /**
+     * Método que asigna la variable estatica del applet del tamaño
+     * @param h 
+     */
     public static void setH(int h) {
         H = h;
     }
     
-  
+   /**
+    * Método que regresa la variable estatica del applet 
+    * @return H que es el <I> Height </I>
+    */
     public static int getH() {
         return H;
     }
     
+    /**
+     * Método que actualiza las <I>Animaciones</I> del applet
+     * @param tiempo 
+     */
     public void actualiza(long tiempo) {
         animacion.actualiza(tiempo);
     }
-
+        
+    /**
+     * Calcula si el objeto choco con otro objeto
+     * @param posX del objeto que esta checando
+     * @param posY del objeto que esta checando
+     * @return boolean true/false
+     */
      public boolean checaIntersecion (int posX, int posY) {
             return getPerimetro().contains(new Point(posX,posY));
         }
      
     
-     
-        public boolean intersecta(Base obj) {
+     /**
+      * Método que checa si intersecto un objeto con otro objeto
+      * @param obj
+      * @return boolean true/false
+      */
+     public boolean intersecta(Base obj) {
         return getPerimetro().intersects(obj.getPerimetro());
     }
 
+     /**
+      * Se verifica si se choco por el centro superior para la <I>Canasta</I>
+      * @param obj
+      * @return 
+      */
     public boolean intersectaCentro(Base obj) {
         return getCentro().intersects(obj.getCentroSup());
     }
     
+    /**
+     * Crea un rectangulo a partir de unas cordenadas y lo regresa para ser evaluado como perimetro
+     * @return Rectangle
+     */
      public Rectangle getCentro() {
         return new Rectangle((int) getPosX() + getAncho()/4, (int) getPosY() + 3*getAlto()/8, 
                 getAncho()/2, getAlto()/4);
     }
     
+     
+     /**
+      * Obtiene la parte superior del rectangulo para despues checar <I>Interseccion</I>
+      * @return Rectangle
+      */
     public Rectangle getCentroSup() {
         return new Rectangle((int) getPosX() + getAncho()/4, (int) getPosY(), 
                 getAncho()/2, getAlto()/4);
