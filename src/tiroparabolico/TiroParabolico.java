@@ -88,6 +88,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private Image tableroInstrucciones;
     private Image pausaImagen; 
     private Image background; 
+private Image credits;
 
 // animaciones
     private Animacion anim;
@@ -144,7 +145,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         choqueConCanasta = new SoundClip("Mono/coin.wav");
         choqueConSuelo = new SoundClip("Mono/exp.wav");
     
-      
+      credits=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/credits.png"));
         
        fotogranada=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada.png"));
        fotogranada1=Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/granada1.png"));
@@ -387,7 +388,8 @@ g.drawImage(background, 0, 0, this);
                 g.drawImage(pausaImagen,getWidth()/2 - new ImageIcon(pausaImagen).getIconWidth()/2, getHeight()/2 - new ImageIcon(pausaImagen).getIconHeight()/2, this);
             }
         
-     
+     if (vidas==0)
+         g.drawImage(credits, 0, 0, this);
         
     }
     
