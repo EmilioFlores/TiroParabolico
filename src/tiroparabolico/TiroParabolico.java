@@ -10,6 +10,7 @@ import java.applet.AudioClip;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_P;
@@ -17,8 +18,17 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
@@ -53,6 +63,10 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
     private int vidas;
     private int score;
 
+    
+    private String[] arr;  
+    private final String nombreArchivo = "guardar.txt";
+    
 // boleanos
     private boolean pausa;      // bool que checa si se pauso
     private boolean clicked;    // checador que checa si se movio el objeto con tecla
@@ -193,14 +207,14 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
        fotoCanasta1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
        
        //fotoCanasta2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/Basket2.png"));
-        tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/inst.png"));
+       tableroInstrucciones = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Mono/instruccionesTiroParabolico.jpg"));
        
         anim = new Animacion();
         animCanasta = new Animacion();
         animg= new Animacion();
 
-        animCanasta.sumaCuadro(fotoCanasta, 200);
-        animCanasta.sumaCuadro(fotoCanasta1, 200);
+        animCanasta.sumaCuadro(fotoCanasta, 700);
+        animCanasta.sumaCuadro(fotoCanasta1, 700);
       //  animCanasta.sumaCuadro(fotoCanasta2, 200);
         
 
@@ -229,7 +243,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         canasta.setPosX((int) (Math.random() * (getWidth() / 2 - canasta.getAncho())) + getWidth() / 2);
         //  canasta.setPosY(getHeight() - 3 * canasta.getAlto() / 2);
         canasta.setPosY(400);
-        granada = new Pelota(-10, yPanelOrigin - new ImageIcon(fotogranada).getIconHeight(), animg);
+        granada = new Pelota(30, yPanelOrigin - new ImageIcon(fotogranada).getIconHeight(), animg);
     }
 
     /**
@@ -309,7 +323,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
             canasta.setPosX(getWidth() - canasta.getAncho());
         }
 
-        if (granada.getPosY() > getHeight() + 10) {
+        if (granada.getPosY() > getHeight() + 10 ) {
             if (sonido) {
                 choqueConSuelo.play();
             }
@@ -324,7 +338,7 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
         }
         if (granada.intersectaCentro(canasta) && !chocado) {
             score += 2;
-            chocado = true;
+           granada.volverInicio();
             if (sonido) {
                 choqueConCanasta.play();
             }
@@ -340,10 +354,11 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
      */
     public void actualiza() {
 
+        
         long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
         tiempo += tiempoTranscurrido;
-
-        granada.avanza();
+        
+        //granada.avanza();
 //        setiempotDoublePosX(x + vx * time);
 //
 //        setDoublePosY(y - (vy*time - 0.5*aceleracion*time*time));
@@ -357,22 +372,19 @@ public class TiroParabolico extends JFrame implements KeyListener, MouseListener
             canasta.setPosX(canasta.getPosX() + 6);
         }
 
-        if (chocado) {
-
-            chocado = false;
-            granada.volverInicio();
-        }
+        
         if (granada.getMovimiento()) {
             granada.actualiza(tiempoTranscurrido);
+            
         }
         
         canasta.animacion.actualiza(tiempoTranscurrido);
         
-        
-        
+       
+       
 
     }
-
+   
     /**
      * Metodo <I>update</I> sobrescrito de la clase <code>Applet</code>,
      * heredado de la clase Container.<P>
@@ -419,18 +431,16 @@ g.drawImage(background, 0, 0, this);
             g.fillRect(0, getHeight() - 100, 70, 100);
 
         }
-        g.setColor(Color.green);
+        
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 29)); 
+        g.setColor(Color.ORANGE);
         g.drawString("Score: " + score, 20, 55);
-        g.setColor(Color.blue);
+        g.setColor(Color.cyan);
         g.drawString("Caídas: " + caidas, 20, 80);
         g.setColor(Color.red);
         g.drawString("Vidas: " + vidas, 20, 105);
         g.setColor(Color.black);
-        g.drawString("P-Pausa ", 20, 130);
-        g.drawString("I-Instrucciones ", 20, 155);
-        g.drawString("G-Guardar ", 20, 180);
-        g.drawString("C-Cargar ", 20, 205);
-        g.drawString("Flechas-Mueve la canasta ", 20, 230);
+  
 
         
         if (canasta != null && canasta.animacion.getImagen() != null) {
@@ -449,6 +459,38 @@ g.drawImage(background, 0, 0, this);
      
         
     }
+    public void grabaArchivo() throws IOException {
+                                                          
+                PrintWriter fileOut = new PrintWriter(new FileWriter(nombreArchivo));
+                fileOut.println(score + " " + caidas + " " + vidas + " " + granada.getDatos() +" " +  chocado);
+                fileOut.close();
+    }
+    
+    
+public void leeArchivo() throws IOException {
+                                                          
+                BufferedReader fileIn;
+                try {
+                   fileIn = new BufferedReader(new FileReader(nombreArchivo));
+                
+                   
+                   String dato=fileIn.readLine();
+                  
+                   arr = dato.split(" ");
+                   
+                   score = Integer.parseInt(arr[0]);
+                   caidas = Integer.parseInt(arr[1]);
+                   vidas = Integer.parseInt(arr[2]);   
+                   granada.setPosX(Double.parseDouble(arr[5]));
+                   granada.setPosY(Double.parseDouble(arr[6]));
+                   granada.setDatos(arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], arr[9]);
+                   chocado = Boolean.parseBoolean(arr[10]);
+                  
+                    fileIn.close();
+                } catch (FileNotFoundException e){
+        }
+
+}
 
     public void keyReleased(KeyEvent e) {
         
@@ -477,31 +519,66 @@ g.drawImage(background, 0, 0, this);
     public void keyPressed(KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            
             canasta.setMoveLeft(true);
+            
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            
             canasta.setMoveRight(true);
+            
         } else if (e.getKeyCode() == KeyEvent.VK_P) {
+            
             if (!pausa) {
+            
                 pausa = true;
                 granada.pausa();
+                
             } else {
+                
                 pausa = false;
                 granada.despausa();
+                
             }
         } else if (e.getKeyCode() == KeyEvent.VK_I) {
+           
             if (!instrucciones) {
                 instrucciones = true;
                 granada.pausa();
+                
             } else {
+                
                 instrucciones = false;
                 granada.despausa();
+                
             }
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            
             sonido = !sonido;
 
+        }else if(e.getKeyCode() == KeyEvent.VK_G){
+                
+            try {
+                   
+                grabaArchivo();
+                
+                } catch (IOException ex) {
+                  
+                    Logger.getLogger(TiroParabolico.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+        } else if (e.getKeyCode() == KeyEvent.VK_C ) {
+            try {
+                
+                leeArchivo();
+               
+                
+            } catch (IOException ex) {
+                
+                Logger.getLogger(TiroParabolico.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-
+     
     public void mousePressed(MouseEvent e) {
 
     }

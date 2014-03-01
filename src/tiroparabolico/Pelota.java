@@ -16,12 +16,13 @@ public class Pelota extends Base{
  
     private double velX;
     private double velY;
+    private final double CONST = .97;
     private double xInicial;
     private double yInicial;
     private boolean movimiento;
     private long tiempoInicial;
     private long tiempoPausa;
-    private static double aceleracion = 200;
+    private static double aceleracion = 300;
     
     /**
      *  Metdo constructor 
@@ -49,13 +50,12 @@ public class Pelota extends Base{
         
         movimiento = true;
         tiempoInicial = System.currentTimeMillis();
-        double maxVelY = .94*getMaxVelY();
+        double maxVelY = CONST*getMaxVelY();
         double minVelY = .3*maxVelY;
         velY = Math.random()*(maxVelY - minVelY) + minVelY;
-        double maxVelX = 310;
-        double minVx = 300;
-//        double maxVelX = .97*getVx(getW() - getAncho() + 10, getH() - getAlto());
-//        double minVx = getVx(getW()/2 + 20, getH() - 2*getAlto());
+
+        double maxVelX = CONST*getVx(getW() - getAncho() + 10, getH() - getAlto());
+        double minVx = getVx(getW()/2 + 20, getH() - 2*getAlto());
         velX = Math.random()*(maxVelX - minVx) + minVx;
         
         
@@ -71,6 +71,28 @@ public class Pelota extends Base{
     
      public void pausa() {
         tiempoPausa = System.currentTimeMillis();
+    }
+     
+     public String getDatos() {
+        
+        String salida = String.valueOf(velX) + " " + String.valueOf (velY) + " " + String.valueOf (this.getPosX())+ " ";
+        salida += String.valueOf (this.getPosY()) + " " + String.valueOf(movimiento) + " " + String.valueOf(tiempoInicial) + " ";
+        salida += String.valueOf(aceleracion);
+        return salida;
+        
+    }
+     
+    public void setDatos(String veloX, String veloY, String xIni, String yIn, String mov, String tiempoIni, String acceleracion) {
+        velX = Double.parseDouble(veloX);
+        velY = Double.parseDouble(veloY);
+        setPosX(Double.parseDouble(xIni));
+        setPosY(Double.parseDouble(yIn));
+        movimiento = Boolean.parseBoolean(mov);
+      
+        tiempoInicial= Long.parseLong(tiempoIni);
+        aceleracion = Double.parseDouble(acceleracion);
+        
+       
     }
     
     public void despausa() {
@@ -106,6 +128,16 @@ public class Pelota extends Base{
     
     public void setVelX(double v) {
         velX = v;
+    }
+    public void setVelY(double v) {
+        velY = v;
+    }
+    
+     public double getVelX() {
+        return velX;
+    }
+    public double getVelY() {
+        return velY;
     }
     
      public static void setAceleracion(double a) {
